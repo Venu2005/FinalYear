@@ -66,7 +66,7 @@ const AddClient = () => {
         name="preferences"
         value={client.preferences}
         onChange={handleChange}
-        placeholder="Preferences"
+        placeholder="Service done"
         required
       />
       <input

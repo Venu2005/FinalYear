@@ -137,3 +137,26 @@ footer {
   color: white;
   font-size: 0.9rem;
 }
+
+
+
+/* Logout button styling */
+.logout-button {
+  background-color: #ff5252;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: white;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+  position: absolute; /* Absolute positioning for placement */
+  top: 60px; /* Distance from the top of the header */
+  right: 20px; /* Distance from the right side of the header */
+}
+
+.logout-button:hover {
+  background-color: #e04848;
+}
+

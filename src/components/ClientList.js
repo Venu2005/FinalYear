@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
-
+import { useNavigate } from 'react-router-dom';
 
 function ClientList() {
   const [clients, setClients] = useState([]);
-  const [error, setError] = useState(null); // Track errors
-  const [searchQuery, setSearchQuery] = useState(''); // Track the search input
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -15,16 +15,15 @@ function ClientList() {
           throw new Error(`Error: ${response.status} - ${response.statusText}`);
         }
         const data = await response.json();
-        setClients(data); // Update the state with fetched clients
+        setClients(data);
       } catch (err) {
-        setError(err.message); // Handle errors
+        setError(err.message);
       }
     };
 
     fetchClients();
-  }, []); // Empty dependency array ensures this runs once on component mount
+  }, []);
 
-  // Filter clients based on the search query
   const filteredClients = clients.filter((client) => {
     const searchTerm = searchQuery.toLowerCase();
     return (
@@ -33,25 +32,24 @@ function ClientList() {
     );
   });
 
-  // Handle delete action
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this client?');
     if (confirmDelete) {
       try {
-        const response = await fetch(`http://localhost:5000/clients/${id}`, {
-          method: 'DELETE',
-        });
+        const response = await fetch(`http://localhost:5000/clients/${id}`, { method: 'DELETE' });
         if (!response.ok) {
           throw new Error(`Failed to delete client: ${response.statusText}`);
         }
-
-        // Remove the client from the state
         setClients(clients.filter((client) => client.ClientID !== id));
         alert('Client deleted successfully!');
       } catch (err) {
         alert(`Error deleting client: ${err.message}`);
       }
     }
+  };
+
+  const handleViewDetails = (id) => {
+    navigate(`/client/${id}`);
   };
 
   return (
@@ -94,22 +92,39 @@ function ClientList() {
               }}
             >
               <div>
-                <strong>{client.Name}</strong> - {client.PhoneNumber} - {client.Email}
+                <strong>{client.Name}</strong> - {client.PhoneNumber} 
               </div>
-              <button
-                onClick={() => handleDelete(client.ClientID)}
-                style={{
-                  backgroundColor: '#e74c3c',
-                  color: '#fff',
-                  border: 'none',
-                  padding: '8px 12px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                }}
-              >
-                Delete
-              </button>
-            </li>
+
+               {/* Right Section: Buttons */}
+  <div style={{ display: 'flex', gap: '10px' }}>
+    <button
+      onClick={() => handleViewDetails(client.ClientID)}
+      style={{
+        backgroundColor: '#3498db',
+        color: '#fff',
+        border: 'none',
+        padding: '8px 12px',
+        borderRadius: '4px',
+        cursor: 'pointer',
+      }}
+    >
+      View Details
+    </button>
+    <button
+      onClick={() => handleDelete(client.ClientID)}
+      style={{
+        backgroundColor: '#e74c3c',
+        color: '#fff',
+        border: 'none',
+        padding: '8px 12px',
+        borderRadius: '4px',
+        cursor: 'pointer',
+      }}
+    >
+      Delete
+    </button>
+  </div>
+</li>
           ))}
         </ul>
       )}
